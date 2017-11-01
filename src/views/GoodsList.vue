@@ -30,13 +30,13 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li>
+                  <li v-for="item in goodsList">
                     <div class="pic">
-                      <a href="#"><img src="/static/1.jpg" alt=""></a>
+                      <a href="#"><img v-bind:src="'/static/' + item.productImage" alt=""></a>
                     </div>
                     <div class="main">
-                      <div class="name">小米电视4 55英寸</div>
-                      <div class="price">3999</div>
+                      <div class="name">{{item.productName}}</div>
+                      <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m">加入购物车</a>
                       </div>
@@ -64,7 +64,69 @@
 //        name: 'HelloWorld',
         data() {
             return {
-                msg: 'Welcome to Vue2-shop'
+                goodsList:[
+                  {
+                    "productId":"10001",
+                    "productName":"小米空气净化器 2",
+                    "salePrice":"699",
+                    "productImage":"小米空气净化器 2.jpg"
+                  },
+                  {
+                    "productId":"10002",
+                    "productName":"米家空气净化器Pro",
+                    "salePrice":"1499",
+                    "productImage":"米家空气净化器Pro.jpg"
+                  },
+                  {
+                    "productId":"10003",
+                    "productName":"米家PM2.5检测仪",
+                    "salePrice":"399",
+                    "productImage":"米家PM2.5检测仪.jpg"
+                  },
+                  {
+                    "productId":"10004",
+                    "productName":"九号平衡车",
+                    "salePrice":"1999",
+                    "productImage":"九号平衡车.jpg"
+                  },
+                  {
+                    "productId":"10005",
+                    "productName":"小米路由器 3",
+                    "salePrice":"139",
+                    "productImage":"小米路由器 3.jpg"
+                  },
+                  {
+                    "productId":"10006",
+                    "productName":"米家压力 IH 电饭煲",
+                    "salePrice":"999",
+                    "productImage":"米家压力 IH 电饭煲.jpg"
+                  },
+                  {
+                    "productId":"10007",
+                    "productName":"米家IH电饭煲",
+                    "salePrice":"399",
+                    "productImage":"米家IH电饭煲.jpg"
+                  },
+                  {
+                    "productId":"10008",
+                    "productName":"米家恒温电水壶",
+                    "salePrice":"199",
+                    "productImage":"米家恒温电水壶.jpg"
+                  },
+                  {
+                    "productId":"10009",
+                    "productName":"米家小白智能摄像机",
+                    "salePrice":"399",
+                    "productImage":"米家小白智能摄像机.jpg"
+                  },
+                  {
+                    "productId":"10010",
+                    "productName":"Yeelight床头灯",
+                    "salePrice":"249",
+                    "productImage":"Yeelight床头灯.jpg"
+                  }
+                ]
+
             }
         },
         components:{

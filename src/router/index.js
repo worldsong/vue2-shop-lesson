@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import GoodsList from '@/views/GoodsList'
 import Cart from '@/views/Cart'
 
@@ -10,8 +9,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: HelloWorld
+      name: 'home',
+      component: GoodsList
     },
     {
       path: '/GoodsList',

@@ -21,7 +21,7 @@ mongoose.connection.on("disconnected", function () {
 
 /* 查询商品列表数据*/
 router.get('/', function(req, res, next) {
-  Goods.find({}, function (err, doc) {
+  Goods.find({}, function (err, song) {
     if(err){
       res.json({
         status: '1',
@@ -32,8 +32,8 @@ router.get('/', function(req, res, next) {
         status:'0',
         msg:'',
         result:{
-          count: doc.length,
-          list: doc
+          count: song.length,
+          list: song
         }
       })
     }

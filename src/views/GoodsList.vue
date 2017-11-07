@@ -44,6 +44,12 @@
                   </li>
                 </ul>
               </div>
+              <div class="view-more-normal"
+                   v-infinite-scroll="loadMore"
+                   infinite-scroll-disabled="busy"
+                   infinite-scroll-distance="20">
+                <img src="./../../static/loading-svg/loading-spinning-bubbles.svg" v-show="loading">
+              </div>
             </div>
           </div>
         </div>
@@ -70,6 +76,8 @@
                 sortFlag: true,
                 page: 1,
                 pageSize: 8,
+                busy:true,
+                loading:false,
                 priceFilter:[
                   {
                     startPrice:'0.00',
@@ -110,18 +118,34 @@
           NavBread
         },
         methods: {
-          getGoodsList(){
+          getGoodsList(flag){
             var param = {
               page: this.page,
               pageSize: this.pageSize,
               sort: this.sortFlag?1:-1
             }
+            this.loading = true;
             axios.get("http://localhost:3000/goods",{
               params:param
             }).then((result) => {
               console.log(result.data.result)
               var res = result.data;
-              this.goodsList = res.result.list;
+              this.loading = false;
+              if(res.status == "0"){
+                if(flag){
+                  this.goodsList = this.goodsList.concat(res.result.list);
+                  if(res.result.count==0){
+                    this.busy = true;
+                  }else{
+                    this.busy = false;
+                  }
+                }else{
+                  this.goodsList = res.result.list;
+                  this.busy = false;
+                }
+              }else{
+                this.goodsList = [];
+              }
             })
           },
           defaultSort(){
@@ -137,6 +161,13 @@
           setPriceFilter(index){
             console.log(index)
             this.priceChecked = index;
+          },
+          loadMore(){
+            this.busy = true;
+            setTimeout(() => {
+              this.page++;
+              this.getGoodsList(true);
+            }, 500)
           },
           showFilterPop(){
             this.filterBy = true;

@@ -126,7 +126,7 @@
               priceLevel: this.priceChecked
             }
             this.loading = true;
-            axios.get("http://localhost:3000/goods",{
+            axios.get("http://localhost:3000/goods/list",{
               params:param
             }).then((result) => {
               console.log(result.data.result)

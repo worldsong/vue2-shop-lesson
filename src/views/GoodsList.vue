@@ -173,7 +173,7 @@
             }, 500)
           },
           addCart(productId){
-            axios.post("/goods/addCart",{
+            axios.post("http://localhost:8080/goods/addCart",{
               productId:productId
             }).then((res)=>{
               var res = res.data;

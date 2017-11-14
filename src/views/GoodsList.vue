@@ -205,7 +205,7 @@
             }).then((res)=>{
               var res = res.data;
               if(res.status==0){
-                alert("加入成功");
+//                alert("加入成功");
                 this.mdShowCart = true;
               }else{
 //                alert("Error msg:" + res.msg );

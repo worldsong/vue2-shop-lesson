@@ -140,4 +140,41 @@ router.post("/cartEdit", function (req,res,next) {
     }
   })
 });
+
+//全部选中接口
+router.post("/editCheckAll", function (req,res,next) {
+  var userId = req.cookies.userId,
+    checkAll = req.body.checkAll?'1':'0';
+  User.findOne({userId:userId}, function (err,user) {
+    if(err){
+      res.json({
+        status:'1',
+        msg:err.message,
+        result:''
+      });
+    }else{
+      if(user){
+        user.cartList.forEach((item)=>{
+          item.checked = checkAll;
+        })
+        user.save(function (err1,doc) {
+          if(err1){
+            res.json({
+              status:'1',
+              msg:err1,message,
+              result:''
+            });
+          }else{
+            res.json({
+              status:'0',
+              msg:'',
+              result:'suc'
+            });
+          }
+        })
+      }
+    }
+  });
+});
+
 module.exports = router;

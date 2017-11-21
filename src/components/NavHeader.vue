@@ -39,7 +39,7 @@
               <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-else>登出</a>
               <!--<a href="javascript:void(0)" class="navbar-link">登出</a>-->
               <div class="navbar-cart-container">
-                <span class="navbar-cart-count"></span>
+                <span class="navbar-cart-count" v-text="cartCount" v-if="cartCount"></span>
                 <a class="navbar-link" href="/#/cart">
                   <svg class="navbar-cart-logo">
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -88,7 +88,7 @@
 <script>
   import './../assets/css/login.css'
   import axios from 'axios'
-
+  import { mapState } from 'vuex'
   export default {
 //        name: 'NavHeader_Song',
         data() {
@@ -96,9 +96,11 @@
             userName:'admin',
             userPwd:'123456',
             errorTip:false,
-            loginModalFlag:false,
-            nickName:''
+            loginModalFlag:false
           }
+        },
+        computed: {
+          ...mapState(['nickName','cartCount'])
         },
     mounted(){
       this.checkLogin();
@@ -107,11 +109,16 @@
       checkLogin(){
         axios.get("/users/checkLogin").then((response)=>{
           var res = response.data;
+          var path = this.$route.pathname;
+
           if(res.status=="0"){
-            this.nickName = res.result;
+//                      this.nickName = res.result;
+                      this.$store.commit("updateUserInfo",res.result);
             this.loginModalFlag = false;
           }else{
-
+            if(this.$route.path!="/goods"){
+              this.$router.push("/goods");
+            }
           }
         });
       },
@@ -128,7 +135,8 @@
           if(res.status=="0"){
             this.errorTip = false;
             this.loginModalFlag = false;
-            this.nickName = res.result.userName;
+                        this.$store.commit("updateUserInfo",res.result.userName);
+                        this.getCartCount();
           }else{
             this.errorTip = true;
           }
@@ -141,6 +149,13 @@
                         this.nickName = '';
                     }
                 })
+            },
+            getCartCount(){
+              axios.get("users/getCartCount").then(res=>{
+                var res = res.data;
+                alert(res.result)
+                this.$store.commit("updateCartCount",res.result);
+              });
       }
     }
     }

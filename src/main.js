@@ -15,11 +15,53 @@ Vue.use(VueLazyload, {
   attempt: 3 // default 1
 })
 Vue.config.productionTip = false
-
+const store = new Vuex.Store({
+  state: {
+    nickName:'',
+    cartCount:0
+  },
+  mutations: {
+    //更新用户信息
+    updateUserInfo(state, nickName) {
+      state.nickName = nickName;
+    },
+    //更新购物车信息
+    updateCartCount(state,cartCount){
+      state.cartCount += cartCount;
+    }
+  }
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
+  mounted(){
+    this.checkLogin();
+    this.getCartCount();
+  },
+  methods:{
+    checkLogin(){
+      axios.get("users/checkLogin").then(res=> {
+        var res = res.data;
+        if (res.status == "0") {
+          this.$store.commit("updateUserInfo", res.result);
+        }else{
+          if(this.$route.path!="/goods"){
+            this.$router.push("/goods");
+          }
+        }
+      });
+    },
+    getCartCount(){
+      axios.get("users/getCartCount").then(res=>{
+        var res = res.data;
+        if(res.status=="0"){
+          this.$store.commit("updateCartCount",res.result);
+        }
+      });
+    }
+  },
   template: '<App/>',
   components: { App }
 })

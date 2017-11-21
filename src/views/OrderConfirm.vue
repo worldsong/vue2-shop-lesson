@@ -181,7 +181,9 @@
         }).then((response)=>{
           let res = response.data;
           if(res.status=="0"){
-            alert('订单创建成功！')
+            this.$router.push({
+              path:'/orderSuccess?orderId='+res.result.orderId
+            })
           }
         })
       }

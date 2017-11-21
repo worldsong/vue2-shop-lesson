@@ -15,3 +15,8 @@ Date.prototype.Format = function (fmt) {
 }
 
 module.exports = {};
+
+var now = new Date();
+var data = now.Format("yyyyMMddhhmmss");
+console.log(now);
+console.log(data);

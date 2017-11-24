@@ -90,7 +90,8 @@
   import NavBread from './../components/NavBread.vue'
   import Modal from './../components/Modal'
   import {currency} from './../util/currency'
-  import axios from 'axios'
+  import axios from 'axios';
+  axios.defaults.withCredentials = true;
 
     export default {
 //        name: 'HelloWorld',
@@ -156,7 +157,7 @@
               priceLevel: this.priceChecked
             }
             this.loading = true;
-            axios.get("/goods/list",{
+            axios.get("http://localhost:3000/goods/list",{
               params:param
             }).then((result) => {
               console.log(result.data.result)
@@ -203,7 +204,7 @@
             }, 500)
           },
           addCart(productId){
-            axios.post("/goods/addCart",{
+            axios.post("http://localhost:3000/goods/addCart",{
               productId:productId
             }).then((res)=>{
               var res = res.data;

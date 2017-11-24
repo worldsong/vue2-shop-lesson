@@ -23,7 +23,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -80,6 +80,14 @@ const webpackConfig = merge(baseWebpackConfig, {
           ) === 0
         )
       }
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      name:'app',
+      async: 'used-twice',
+      minChunks: (module, count) => (
+        count >= 2
+      ),
     }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated

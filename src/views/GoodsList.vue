@@ -209,6 +209,7 @@
               var res = res.data;
               if(res.status==0){
 //                alert("加入成功");
+                this.$store.commit("updateCartCount",1);
                 this.mdShowCart = true;
               }else{
 //                alert("Error msg:" + res.msg );

@@ -146,7 +146,9 @@
                 axios.post("/users/logout").then((response)=>{
                     let res = response.data;
                     if(res.status=="0"){
-                        this.nickName = '';
+//                        this.nickName = '';
+                      this.$store.commit("updateUserInfo",res.result.userName);
+                      this.$store.commit("updateCartCount",res.result);
                     }
                 })
             },

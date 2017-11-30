@@ -293,6 +293,53 @@ router.post("/delAddress", function (req,res,next) {
 
 });
 
+// 增加地址接口
+router.post('/addressAdd', function (req, res, next) {
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  let userName = req.body.userName;
+  let streetName = req.body.streetName;
+  let postCode = req.body.postCode;
+  let tel = req.body.tel;
+  let isDefault = req.body.isDefault;
+  User.findOne({userId: userId}, function (err, user) {
+    if (err) {
+      res.json({
+        status: 1,
+        msg: err.message
+      })
+    }
+    if (user) {
+      if (isDefault) {
+        user.addressList.forEach(function (item) {
+          item.isDefault = false
+        });
+      }
+      user.addressList.push({
+        'addressId': addressId,
+        'userName': userName,
+        'streetName': streetName,
+        'postCode': postCode,
+        'tel': tel,
+        'isDefault': isDefault
+      });
+      user.save(function (err, doc) {
+        if (err) {
+          res.json({
+            status: 1,
+            msg: err.message
+          })
+        } else {
+          res.json({
+            status: 0,
+            msg: ''
+          })
+        }
+      });
+    }
+  });
+});
+
 // 创建订单接口
 router.post("/payMent", function (req,res,next) {
   var userId = req.cookies.userId,

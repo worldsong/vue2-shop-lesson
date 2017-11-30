@@ -150,11 +150,18 @@
         },
         methods: {
           getGoodsList(flag){
+            let startPrice = 0;
+            let endPrice = 0;
+            if (this.priceChecked !== 'all') {
+              startPrice = this.priceFilter[this.priceChecked].startPrice;
+              endPrice = this.priceFilter[this.priceChecked].endPrice;
+            }
             var param = {
               page: this.page,
               pageSize: this.pageSize,
               sort: this.sortFlag?1:-1,
-              priceLevel: this.priceChecked
+              startPrice: startPrice,
+              endPrice: endPrice
             }
             this.loading = true;
             axios.get("http://localhost:3000/goods/list",{

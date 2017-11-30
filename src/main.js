@@ -8,6 +8,7 @@ import infiniteScroll from  'vue-infinite-scroll'
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 import Vuex from 'vuex'
+import './util/validate.js'
 
 Vue.use(infiniteScroll);
 Vue.use(Vuex);

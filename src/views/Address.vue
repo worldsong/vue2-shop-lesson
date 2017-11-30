@@ -79,7 +79,7 @@
                   </div>
                   <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                 </li>
-                <li class="addr-new">
+                <li class="addr-new" @click="mdShow=true;overLayFlag=true">
                   <div class="add-new-inner">
                     <i class="icon-add">
                       <svg class="icon icon-add"><use xlink:href="#icon-add"></use></svg>
@@ -133,6 +133,58 @@
         <a class="btn btn--m btn--red" href="javascript:;" @click="isMdShow=false">取消</a>
       </div>
     </modal>
+    <div>
+      <div class="addr-add md-modal md-modal-transition" v-bind:class="{'md-show': mdShow}">
+        <div class="md-modal-inner">
+          <div class="md-top">
+            <button class="md-close" @click="closeAddModal">Close</button>
+          </div>
+          <ul>
+            <li>
+              <label>收货姓名:</label>
+              <input type="text" v-model="userName" v-validate="'required'" name="userName" placeholder=""/>
+              <small v-bind:class="{'show':errors.has('userName')}">{{errors.first('userName')}}</small>
+            </li>
+            <li>
+              <label class="street">详细地址:</label>
+              <textarea class="addr-add-street" v-model="streetName" v-validate="'required'" name="streetName"
+                        placeholder=""></textarea>
+              <small v-bind:class="{'show':errors.has('streetName')}">{{errors.first('streetName')}}</small>
+            </li>
+            <li>
+              <label>邮政编码:</label>
+              <input type="text" v-model="postCode" v-validate="'required|postCode'" name="postCode"
+                     placeholder=""/>
+              <small v-bind:class="{'show':errors.has('postCode')}">{{errors.first('postCode')}}</small>
+            </li>
+            <li>
+              <label>联系电话:</label>
+              <input type="text" v-model="tel" v-validate="'required|phone'" name="phone"  placeholder=""/>
+              <small v-bind:class="{'show':errors.has('phone')}">{{errors.first('phone')}}</small>
+            </li>
+            <li>
+              <div class="addr-opration addr-set-default">
+                <input type="checkbox" id="isDefault" v-model="isDefault">
+                <label for="isDefault">设为默认地址</label>
+              </div>
+            </li>
+          </ul>
+          <div class="btn-wrap">
+            <a class="btn btn--m" href="javascript:void(0);" @click="addressAdd">确定</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <Modal v-bind:mdShow="msgShow" v-on:close="msgClose">
+      <p slot="message">
+        {{msg}}
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:void(0);" @click="msgClose">确定</a>
+      </div>
+    </Modal>
+    <div class="md-overlay" v-show="overLayFlag" @click.stop="closeOverLay"></div>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -144,7 +196,9 @@
   import NavBread from './../components/NavBread'
   import Modal from './../components/Modal'
   import {currency} from './../util/currency'
+  import { Validator } from 'vee-validate';
   import axios from 'axios';
+  const validator = new Validator();
   axios.defaults.withCredentials = true;
   export default{
     data(){
@@ -154,6 +208,15 @@
         selectedAddrId:'',
         addressList:[],
         isMdShow:false,
+        mdShow: false,
+        userName: '',
+        streetName: '',
+        postCode: '',
+        tel: '',
+        isDefault: false,
+        overLayFlag: false,
+        msgShow: false,
+        msg: '',
         addressId:''
       }
     },
@@ -219,7 +282,97 @@
             alert(res.msg)
           }
         })
+      },
+      addressAdd () {
+          this.$validator.validateAll().then((e)=>{
+            if (e) {
+              let addressId = Math.round(Math.random()*10000000000);
+              axios.post('/users/addressAdd', {
+                'addressId': addressId,
+                'userName': this.userName,
+                'streetName': this.streetName,
+                'postCode': this.postCode,
+                'tel': this.tel,
+                'isDefault': this.isDefault
+              }).then((res) => {
+                let result = res.data;
+                if (result.status === 0) {
+                  this.closeAddModal();
+                  this.init()
+                } else {
+                  this.msg = result.msg;
+                  this.overLayFlag = true;
+                  this.msgShow = true
+                }
+              })
+            } else {
+                return false
+            }
+          });
+      },
+      closeAddModal () {
+        this.mdShow = false;
+        this.overLayFlag = false;
+        this.addressId = '';
+        this.userName = '';
+        this.postCode = '';
+        this.streetName = '';
+        this.tel = '';
+        this.isDefault = false
+      },
+      msgClose () {
+        this.msg = '';
+        this.msgShow = false;
+        this.overLayFlag = false
+      },
+      closeOverLay () {
+        this.msgClose();
+        this.closeAddModal()
       }
     }
   }
 </script>
+<style>
+  .addr-add input[type="text"], .addr-add textarea {
+    width: 300px;
+    padding: 10px;
+    margin-left: 15px;
+  }
+  .addr-add {
+    padding: 20px 20px 40px 20px;
+    background: #fff;
+    overflow: hidden;
+    cursor: pointer;
+    color: #333;
+  }
+  .addr-add .street {
+    vertical-align: top;
+  }
+  .addr-add .addr-add-street {
+    height: 100px;
+  }
+  .addr-add ul {
+    overflow: hidden;
+    clear: both;
+  }
+  .addr-add ul li{
+    margin-top: 5px;
+    clear: both;
+    overflow: hidden;
+  }
+  .addr-add .addr-set-default{
+    float: right;
+    margin-right: 50px;
+  }
+  .addr-add small {
+    color: red;
+    display: block;
+    visibility: hidden;
+    margin-top: 5px;
+    margin-left: 80px;
+    height: 20px;
+  }
+  .addr-add small.show {
+    visibility: visible;
+  }
+</style>

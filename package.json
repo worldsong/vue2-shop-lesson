@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "vee-validate": "^2.0.0-rc.25",
     "vue": "^2.5.2",
     "vue-infinite-scroll": "^2.0.2",
     "vue-lazyload": "^1.1.4",
